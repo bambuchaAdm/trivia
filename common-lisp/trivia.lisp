@@ -68,12 +68,20 @@
 (defgeneric ask-question (game))
 (defgeneric current-category (game))
 
-(defmethod ask-question ((g game))
-  )
 
 (defmethod current-category ((g game))
   )
 
+(defmethod ask-question ((g game))
+  (if (eql (current-category g) "Pop")
+      (format t "~a" (pop (pop-questions g))))
+  (if (eql (current-category g) "Science")
+      (format t "~a" (pop (science-questions g))))
+  (if (eql (current-category g) "Sports")
+      (format t "~a" (pop (sport-questions g))))
+  (if (eql (current-category g) "Rock")
+      (format t "~a" (pop (rock-questions g)))))
+ 
 
 (defmethod roll ((game game)(roll integer))
   (format t "~a is the current player~%" (elt (players g) (current-player g)))
@@ -106,3 +114,4 @@
 		(elt (places g) (current-player g)))
 	(format t "The category is ~a~%" (current-category g))
 	(ask-question g))))
+
