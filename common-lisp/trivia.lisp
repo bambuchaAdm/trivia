@@ -67,7 +67,9 @@
 (defgeneric roll (game roll))
 (defgeneric ask-question (game))
 (defgeneric current-category (game))
-
+(defgeneric was-correctly-answered (game))
+(defgeneric did-player-winP (game))
+(defgeneric wrong_answer (game))
 
 (defmethod current-category ((g game))
   (block nil
@@ -125,3 +127,47 @@
 	(format t "The category is ~a~%" (current-category g))
 	(ask-question g))))
 
+(defmethod was-correctly-answered ((g game))
+  (if (elt (in-penalty-box g) (current-player g))
+      (if (is-getting-out-of-penalty-box g)
+	  (progn 
+	    (format t "Answer was correct!!!!~%")
+	    (incf (elt (purses g) (current-player g)))
+	    (format t "~a now has ~a Gold Coins~%"
+		    (elt (players g) (current-player g))
+		    (elt (purses g) (current-player g)))
+	    (defvar winner (did-player-win g))
+	    (incf (current-player g))
+	    (when (eql (current-player g) (length (players g)))
+	      (setf (current-player g) 0))
+	    winner)
+	  (progn
+	    (incf (current-player g))
+	    (when (eql (current-player g) (length (players g)))
+	      (setf (current-player g) 0))
+	    T))
+      (progn 
+	(format t "Answer was corrent!!!!")
+	(incf (elt (purses g) (current-player g)))
+	(format t "~a now has ~a Gold Coins~%"
+		(elt (players g) (current-player g))
+		(elt (purses g) (current-player g)))
+	(defvar winner (did-player-win g))
+	(incf (current-player g))
+	(when (eql (current-player g) (length (players g)))
+	      (setf (current-player g) 0))
+	winner))
+
+(defmethod wrong_answer((g game))
+  (format t "Question was incorrectly answered~%")
+  (format t "~a was sent to the penalty box~%" 
+	  (elt (players g) (current-player g)))
+  (setf (elt (in-penalty-box g) (current-player g)) T)
+  (incf (current-player g))
+  (when (eql (current-player g) (length (players g)))
+    (setf (current-player g) 0))
+  T)
+  
+
+(defmethod did-player-win ((g game))
+  (not (eql 6 (elt (purses g)(current-player g))))
