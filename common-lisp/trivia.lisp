@@ -83,7 +83,7 @@
       (if (not (eq (mod roll 2) 0))
 	  (progn 
 
-	    ;(setq (slot-value g 'is-getting-out-of-penalty-box) t)
+	    (setf (is-getting-out-of-penalty-box g) T)
 	    (format t "~a is getting out of the penalty box~%" (elt (players g) (current-player g)))
 	    (incf (elt (places g) (current-player g)) roll)
 	    (when (> (elt (places g) (current-player g)) 11)
