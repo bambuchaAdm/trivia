@@ -70,7 +70,17 @@
 
 
 (defmethod current-category ((g game))
-  )
+  (block nil
+    (if (eq 0 (elt (places g) (current-player g))) (return "Pop"))
+    (if (eq 4 (elt (places g) (current-player g))) (return "Pop"))
+    (if (eq 8 (elt (places g) (current-player g))) (return "Pop"))
+    (if (eq 1 (elt (places g) (current-player g))) (return "Science"))
+    (if (eq 5 (elt (places g) (current-player g))) (return "Science"))
+    (if (eq 9 (elt (places g) (current-player g))) (return "Science"))
+    (if (eq 2 (elt (places g) (current-player g))) (return "Sports"))
+    (if (eq 6 (elt (places g) (current-player g))) (return "Sports"))
+    (if (eq 10 (elt (places g) (current-player g))) (return "Sports"))
+    (return "Rock")))
 
 (defmethod ask-question ((g game))
   (if (eql (current-category g) "Pop")
